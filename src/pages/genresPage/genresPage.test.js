@@ -3,15 +3,15 @@ import { configure, shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import "isomorphic-fetch";
 
-import Cloud from '../../components/Cloud';
-import GenresCloud from './GenresCloud';
+import Cloud from '../../components/cloud';
+import GenresPage from './genresPage';
 
 configure({adapter: new Adapter()});
 
-describe('<GenresCloud />', () => {
+describe('<GenresPage />', () => {
     let wrapper;
     beforeEach(() => {
-        wrapper = shallow(<GenresCloud onFetchRules={() => {}} loading={false} isLoaded={false} />);
+        wrapper = shallow(<GenresPage onFetchRules={() => {}} loading={false} isLoaded={false} />);
     });
     it('renders one <Cloud /> element if rules loaded', () => {
         wrapper.setProps({isLoaded: true});

@@ -5,7 +5,7 @@ import CSSModules from 'react-css-modules';
 import cn from 'classnames';
 import noop from 'lodash/noop';
 
-import styles from './Tag.module.scss';
+import styles from './tag.module.scss';
 
 const BACKGROUND_COLOR = {
     RED: 'red',

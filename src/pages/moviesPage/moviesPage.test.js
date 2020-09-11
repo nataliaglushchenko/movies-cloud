@@ -3,15 +3,15 @@ import { configure, shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import "isomorphic-fetch";
 
-import MatchedMovies from './MatchedMovies';
-import Cloud from '../../../components/Cloud';
+import MoviesPage from './moviesPage';
+import Cloud from '../../../components/cloud';
 
 configure({adapter: new Adapter()});
 
-describe('<MatchedMovies />', () => {
+describe('<MoviesPage />', () => {
     let wrapper;
     beforeEach(() => {
-        wrapper = shallow(<MatchedMovies onFetchMovies={() => {}} />);
+        wrapper = shallow(<MoviesPage onFetchMovies={() => {}} />);
     });
     
     it('renders one <Cloud /> element', () => {

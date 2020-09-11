@@ -2,7 +2,7 @@ import React from 'react';
 import cn from 'classnames';
 import CSSModules from 'react-css-modules';
 
-import styles from './Tab.module.scss';
+import styles from './tab.module.scss';
 
 function Tab(props) {
     const { 

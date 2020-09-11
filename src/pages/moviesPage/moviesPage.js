@@ -4,11 +4,11 @@ import CSSModules from 'react-css-modules';
 import cn from 'classnames';
 import uniqBy from 'lodash/uniqBy';
 
-import { getHash } from '../../../utitls/hash';
-import Cloud from '../../../components/Cloud';
-import Tag from '../../../components/Tag';
+import { getHash } from '../../utitls/hash';
+import Cloud from '../../components/cloud';
+import Tag from '../../components/tag';
 
-import styles from './MatchedMovies.module.scss';
+import styles from './moviesPage.module.scss';
 
 const PADDING_WEIGHT = 10;
 
@@ -40,7 +40,7 @@ const defaultProps = {
     matchedMovies: []
 };
 
-class MatchedMovies extends Component {
+class MoviesPage extends Component {
     state = {
         tagClicked: null,
         showSidebar: false,
@@ -193,7 +193,7 @@ class MatchedMovies extends Component {
     }
 }
 
-MatchedMovies.propTypes = propTypes;
-MatchedMovies.defaultProps = defaultProps;
+MoviesPage.propTypes = propTypes;
+MoviesPage.defaultProps = defaultProps;
 
-export default CSSModules(MatchedMovies, styles);
+export default CSSModules(MoviesPage, styles);

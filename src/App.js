@@ -3,10 +3,10 @@ import { Route, Switch, Redirect } from 'react-router-dom';
 import CSSModules from 'react-css-modules';
 import cn from 'classnames';
 
-import GenresCloud from './pages/GenresCloud';
-import MatchedMovies from './pages/GenresCloud/MatchedMovies';
-import Layout from './hoc/Layout';
-import styles from './App.module.scss';
+import GenresPage from './pages/genresPage';
+import MoviesPage from './pages/moviesPage';
+import Layout from './hoc/layout';
+import styles from './app.module.scss';
 
 class App extends Component {
     render() {
@@ -15,9 +15,9 @@ class App extends Component {
             <div className={cn(styles['App'])}>
                 <Layout>
                     <Switch>
-                        <Route path="/view/:genre" component={MatchedMovies} />
-                        <Route path="/view" component={GenresCloud} />
-                        <Redirect from='/' exact to="/view" /> 
+                        <Route path="/find-movies/:genre" component={MoviesPage} />
+                        <Route path="/find-movies" component={GenresPage} />
+                        <Redirect from='/' exact to="/find-movies" />
                         <Route render={()=><h1>Not Found</h1>} />
                     </Switch>
                 </Layout>

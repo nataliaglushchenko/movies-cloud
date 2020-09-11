@@ -1,3 +1,3 @@
-import Cloud from './Cloud';
+import Cloud from './cloud';
 
 export default Cloud;

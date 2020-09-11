@@ -5,12 +5,12 @@ import { uniq } from 'lodash';
 import noop from 'lodash/noop';
 import cn from 'classnames';
 
-import Cloud from '../../components/Cloud';
-import Tag from '../../components/Tag';
+import Cloud from '../../components/cloud';
+import Tag from '../../components/tag';
 import { getHash } from '../../utitls/hash';
 
-import genresCloudStyles from './GenresCloud.module.scss';
-import Toolbar from '../../components/Toolbar/Toolbar';
+import genresCloudStyles from './genresPage.module.scss';
+import Toolbar from '../../components/toolbar';
 
 const PADDING_WEIGHT = 9;
 const SEARCH_MODE = {
@@ -38,7 +38,7 @@ const defaultProps = {
     rules: []
 };
 
-class GenresCloud extends Component {
+class GenresPage extends Component {
     state = {
         searchMode: SEARCH_MODE.SEARCH_BY_MAIN_GENRE
     }
@@ -150,7 +150,7 @@ class GenresCloud extends Component {
     }
 }
 
-GenresCloud.propTypes = propTypes;
-GenresCloud.defaultProps = defaultProps;
+GenresPage.propTypes = propTypes;
+GenresPage.defaultProps = defaultProps;
 
-export default CSSModules(GenresCloud, genresCloudStyles);
+export default CSSModules(GenresPage, genresCloudStyles);

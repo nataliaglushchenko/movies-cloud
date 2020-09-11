@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import GenresCloud from './GenresCloud';
+import GenresPage from './genresPage';
 import * as actions from '../../store/actions';
 
 const mapStateToProps = (state) => {
@@ -19,4 +19,4 @@ const mapDispatchToProps = (dispatch) => {
     };
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(GenresCloud));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(GenresPage));

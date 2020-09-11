@@ -2,8 +2,8 @@ import React from 'react';
 import cn from 'classnames';
 import CSSModules from 'react-css-modules';
 
-import Tab from './Tab/Tab';
-import styles from './Toolbar.module.scss';
+import Tab from './tab';
+import styles from './toolbar.module.scss';
 
 function Toolbar(props) {  
     const { styles, tabs } = props;

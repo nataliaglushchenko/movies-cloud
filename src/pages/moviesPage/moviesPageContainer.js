@@ -1,9 +1,9 @@
-import MatchedMovies from './MatchedMovies';
+import MoviesPage from './moviesPage';
 
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import * as actions from '../../../store/actions';
+import * as actions from '../../store/actions';
 
 const mapStateToProps = (state) => {
     return {
@@ -19,4 +19,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MatchedMovies));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MoviesPage));

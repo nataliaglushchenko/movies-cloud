@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules';
 import cn from 'classnames';
 
-import CloudStyles from './Cloud.module.scss';
+import CloudStyles from './cloud.module.scss';
 
 const propTypes = {
     children: PropTypes.arrayOf(PropTypes.node),
