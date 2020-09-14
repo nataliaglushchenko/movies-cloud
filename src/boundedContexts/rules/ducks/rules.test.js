@@ -1,11 +1,13 @@
-import reducer from './rules';
-import * as actionTypes from '../actions/actionTypes';
+import {
+    reducer,
+    FETCH_RULES_SUCCEEDED
+} from './rules';
 
 describe('rules reducer', () => {
     it('should return the initial state', () => {
         expect(reducer(undefined, {})).toEqual({
             rules: [],
-            loading: false,
+            isLoading: false,
             isLoaded: false,
             selectedItem: {}
         });
@@ -13,14 +15,14 @@ describe('rules reducer', () => {
     it('should fetch rules upon fetchRules call', () => {
         expect(reducer({
             rules: [],
-            loading: false,
+            isLoading: false,
             isLoaded: false,
             selectedItem: {}
         }, { 
-            type: actionTypes.FETCH_RULES_SUCCESS,
+            type: FETCH_RULES_SUCCEEDED,
             rules: ['some-rule'] })).toEqual({
             rules: ['some-rule'],
-            loading: false,
+            isLoading: false,
             isLoaded: true,
             selectedItem: {}
         });
