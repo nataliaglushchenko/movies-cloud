@@ -2,20 +2,34 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import GenresPage from './genresPage';
-import * as actions from '../../store/actions';
+
+import {  
+    isRulesLoadingSelector, 
+    isRulesLoadedSelector
+} from '../../boundedContexts/rules/ducks/rules';
+
+import { fetchRules } from '../../boundedContexts/rules/actions/fetchRules';
+
+import { 
+    searchModeSelector,
+    genresSelector
+} from '../../boundedContexts/tags/ducks/genres';
+
+import { selectSearchMode } from '../../boundedContexts/tags/actions/selectSearchMode';
 
 const mapStateToProps = (state) => {
     return {
-        rules: state.rules.rules,
-        isLoaded: state.rules.isLoaded,
-        loading: state.rules.loading
+        isLoading: isRulesLoadingSelector(state),
+        isLoaded: isRulesLoadedSelector(state),
+        searchMode: searchModeSelector(state),
+        genres: genresSelector(state)
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        onFetchRules: () => dispatch(actions.fetchRules()),
-        onSelectItem: (item) => dispatch(actions.selectItem(item))
+        onFetchRules: () => dispatch(fetchRules()),
+        onSelectSearchMode: (searchMode) => dispatch(selectSearchMode(searchMode))
     };
 };
 
