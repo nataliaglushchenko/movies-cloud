@@ -1,69 +1,61 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-
-import CSSModules from 'react-css-modules';
 import cn from 'classnames';
 import noop from 'lodash/noop';
+import { Button } from 'reactstrap';
 
-import styles from './tag.module.scss';
-
-const BACKGROUND_COLOR = {
-    RED: 'red',
-    BLUE: 'blue',
-    ORANGE: 'orange',
-    GREEN: 'green',
-    YELLOW: 'yellow',
-    NEUTRAL: 'neutral'
-}
+import { RULE_COLORS } from '../../boundedContexts/app/models/ruleColors';
+import COLORS_MAP from '../../boundedContexts/app/models/colorMappings';
 
 const propTypes = {
-    onMouseOver: PropTypes.func,
-    onClick: PropTypes.func,
-    clicked: PropTypes.bool,
+    onHover: PropTypes.func,
+    onClick: PropTypes.func.isRequired,
+    active: PropTypes.bool,
     padding: PropTypes.number,
-    backgroundColor: PropTypes.oneOf(Object.values(BACKGROUND_COLOR)),
-    children: PropTypes.string.isRequired,
-    styles: PropTypes.object
+    backgroundColor: PropTypes.oneOf(Object.values(RULE_COLORS)),
+    title: PropTypes.string.isRequired
 };
 
 const defaultProps = {
-    onMouseOver: noop,
-    onClick: noop,
-    clicked: false,
-    backgroundColor: BACKGROUND_COLOR.NEUTRAL,
+    onHover: noop,
+    active: false,
+    backgroundColor: RULE_COLORS.NEUTRAL,
     padding: 0
 };
 
-class Tag extends Component {
-    render() {
-        const {
-            onMouseOver,
-            onClick,
-            clicked,
-            styles,
-            padding,
-            backgroundColor,
-            children
-        } = this.props;
-        return (
-            <div 
-                onMouseOver={onMouseOver}
-                onClick={onClick}
-                className={cn(
-                    styles['Tag'],
-                    {
-                        [styles['Clicked']]: clicked
-                    }
-                )}
-                style={{ padding: padding, backgroundColor: backgroundColor }}
-            >
-                {children}
-            </div>
-        );
-    }
+function Tag (props) {
+    const {
+        onHover,
+        onMouseOut,
+        onClick,
+        active,
+        padding,
+        backgroundColor,
+        title
+    } = props;
+
+    const color = COLORS_MAP[backgroundColor];
+    
+    return (
+        <Button 
+            onMouseOver={() => onHover(title)}
+            onMouseOut={onMouseOut}
+            onClick={onClick}
+            className={cn(
+                'm-2'
+            )}
+            color={color}
+            active={active}
+            style={{ 
+                padding: padding
+            }}
+        >
+            {title}
+        </Button>
+    );
 }
 
 Tag.propTypes = propTypes;
 Tag.defaultProps = defaultProps;
 
-export default CSSModules(Tag, styles);
+export default Tag;

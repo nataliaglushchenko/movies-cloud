@@ -1,19 +1,22 @@
-import React, { Component } from 'react';
-import CSSModules from 'react-css-modules';
+import React from 'react';
 import cn from 'classnames';
 
-import styles from './layout.module.scss';
+import Toolbar from '../../components/toolbar';
 
-class Layout extends Component {
-    render () {
-        const { styles } = this.props;
-        
-        return (
-            <main className={cn(styles['Content'])}>
-                {this.props.children}
-            </main>
-        );
-    };
+function Layout(props) {
+    const { children } = props;
+
+    return (
+        <main 
+            className={cn(
+                'px-5',
+                'py-3'
+            )}
+        >
+            <Toolbar />
+            {children}
+        </main>
+    );
 }
 
-export default CSSModules(Layout, styles);
+export default Layout;

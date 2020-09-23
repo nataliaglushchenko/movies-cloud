@@ -1,3 +1,3 @@
-import Toolbar from './toolbar';
+import Toolbar from './toolbarContainer';
 
 export default Toolbar;

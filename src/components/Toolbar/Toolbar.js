@@ -1,29 +1,49 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import cn from 'classnames';
-import CSSModules from 'react-css-modules';
+import { Button } from 'reactstrap';
 
-import Tab from './tab';
-import styles from './toolbar.module.scss';
+const propTypes = {
+};
+
+const defaultProps = {
+};
 
 function Toolbar(props) {  
-    const { styles, tabs } = props;
+    const {
+        history
+    } = props;
+    
 
-    const toolbar = tabs.map(tab => {        
-        return (
-            <Tab 
-                key={tab.title} 
-                title={tab.title}
-                clicked={tab.clicked}
-                onClick={tab.onClick} 
-            />
-        );
-    });
+    const handleGoHomeClick = () => {
+        history.push('/');
+    };
 
     return (
-        <nav className={cn(styles['Toolbar'])}>
-            {toolbar}
-        </nav>
+        <div
+            className={cn(
+                'd-flex',
+                'flex-row',
+                'justify-content-start',
+                'align-content-baseline',
+            )}
+        >
+            <Button
+                className={cn(
+                    'text-left',
+                    'col-2'
+                )} 
+                onClick={handleGoHomeClick}
+                color="link"
+            >
+                HOME
+            </Button>
+        </div>
+        
     );
 }
 
-export default CSSModules(Toolbar, styles);
+Toolbar.propTypes = propTypes;
+Toolbar.defaultProps = defaultProps;
+
+export default Toolbar;
