@@ -1,13 +1,11 @@
-import { SEARCH_MODES } from '../models/searchModes';
-
 // -----------------------------------------------------------------
 // Constants
 // -----------------------------------------------------------------
 
-export const SEARCH_MODE_SELECTED = 'SEARCH_MODE_SELECTED';
+export const CALCULATE_MOVIES_QUANTITY_BY_DECADES = 'CALCULATE_MOVIES_QUANTITY_BY_DECADES';
 
 const initialState = {
-    searchMode: SEARCH_MODES.SEARCH_BY_ALL_GENRES
+    decades: []
 };
 
 // -----------------------------------------------------------------
@@ -15,33 +13,32 @@ const initialState = {
 // -----------------------------------------------------------------
 
 export default function reducer(state = initialState, action) {
-    switch (action.type) {
-        case SEARCH_MODE_SELECTED:
+    switch(action.type) {
+        case CALCULATE_MOVIES_QUANTITY_BY_DECADES:
             return {
                 ...state,
-                searchMode: action.payload.searchMode
+                decades: action.payload.decades
             };
-
-        default:
+        default: 
             return state;
-    }
-}
+    }  
+};
 
 // -----------------------------------------------------------------
 // Action Creators
 // -----------------------------------------------------------------
 
-export const searchModeSelected = (searchMode) => {
+export const moviesQuantityByDecadesCalculated = (decades) => {
     return {
-        type: SEARCH_MODE_SELECTED,
-        payload: { searchMode }
-    };
-};
+        type: CALCULATE_MOVIES_QUANTITY_BY_DECADES,
+        payload: { decades }
+    }
+}
 
 // -----------------------------------------------------------------
 // Selectors
 // -----------------------------------------------------------------
 
-const rootSelector = state => state.genres;
+const rootSelector = state => state.tags.decades;
 
-export const searchModeSelector = state => rootSelector(state).searchMode;
+export const decadesSelector = state => rootSelector(state).decades;

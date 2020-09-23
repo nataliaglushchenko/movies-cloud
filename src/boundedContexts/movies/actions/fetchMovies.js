@@ -1,21 +1,32 @@
+import Tag from '../../tags/models/tag';
+
 import { 
     fetchMoviesStarted, 
-    fetchMoviesSucceeded, 
-    processMoviesData, 
+    fetchMoviesSucceeded,
     fetchMoviesFailed 
 } from '../ducks/movies';
 
-export const fetchMovies = () => {
-    return (dispatch, getState) => {
-        const state = getState();
+import { moviesQuantityByDecadesCalculated } from '../../tags/ducks/decades';
 
+import Movie from '../models/movie';
+
+import RULE_MATCH_TYPES_MAP from '../models/ruleMatchTypeMappings';
+
+export const fetchMovies = (genre, mode) => {
+    return (dispatch) => {
+        const ruleMatchType = RULE_MATCH_TYPES_MAP[mode];
         dispatch(fetchMoviesStarted());
         
-        fetch('http://localhost:4500/movies')
+        fetch(`http://localhost:4500/matched-movies/${genre}/${ruleMatchType}`)
             .then(res => res.json())
             .then(res => {
-                dispatch(fetchMoviesSucceeded(res));
-                dispatch(processMoviesData(res, state.rules.selectedItem.genre, state.rules.selectedItem.ruleMatchType));
+                const movies = res.map(Movie.create);
+                
+                const decades = Tag.getDecadesTags(movies);
+                dispatch(moviesQuantityByDecadesCalculated(decades));
+
+                dispatch(fetchMoviesSucceeded(movies));
+
             })
             .catch(err => {
                 dispatch(fetchMoviesFailed(err));

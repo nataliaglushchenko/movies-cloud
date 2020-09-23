@@ -1,11 +1,11 @@
 import { combineReducers } from 'redux';
 
-import genres from './genres/ducks/genres';
+import tags from './tags/ducks';
 import rules from './rules/ducks/rules';
 import movies from './movies/ducks/movies';
 
 const rootReducer = combineReducers({
-    genres,
+    tags,
     rules,
     movies
 });

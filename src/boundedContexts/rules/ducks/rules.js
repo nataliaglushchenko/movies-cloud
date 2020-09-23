@@ -6,13 +6,10 @@ export const FETCH_RULES_STARTED = 'FETCH_RULES_STARTED';
 export const FETCH_RULES_SUCCEEDED = 'FETCH_RULES_SUCCEEDED';
 export const FETCH_RULES_FAILED = 'FETCH_RULES_FAILED';
 
-export const ITEM_SELECTED = 'ITEM_SELECTED';
-
 const initialState = {
     rules: [],
     isLoading: false,
-    isLoaded: false,
-    selectedItem: {}
+    isLoaded: false
 };
 
 // -----------------------------------------------------------------
@@ -26,7 +23,8 @@ export default function reducer(state = initialState, action) {
                 ...state,
                 isLoading: true,
                 isLoaded: false
-            };            
+            }; 
+
         case FETCH_RULES_SUCCEEDED: 
             return {
                 ...state,
@@ -34,17 +32,13 @@ export default function reducer(state = initialState, action) {
                 rules: action.payload.rules,
                 isLoaded: true
             }; 
+
         case FETCH_RULES_FAILED:
             return {
                 ...state,
                 isLoading: false,
                 isLoaded: false
-            }; 
-        case ITEM_SELECTED: 
-            return {
-                ...state,
-                selectedItem: action.payload.item
-            }; 
+            };
 
         default: 
             return state;
@@ -76,13 +70,6 @@ export const fetchRulesFailed = (error) => {
     };
 };
 
-export const itemSelected = (item) => {
-    return {
-        type: ITEM_SELECTED,
-        payload: { item }
-    };
-};
-
 // -----------------------------------------------------------------
 // Selectors
 // -----------------------------------------------------------------
@@ -92,4 +79,3 @@ const rootSelector = state => state.rules;
 export const isRulesLoadingSelector = state => rootSelector(state).isLoading;
 export const isRulesLoadedSelector = state => rootSelector(state).isLoaded;
 export const rulesSelector = state => rootSelector(state).rules;
-export const selectedItemSelector = state => rootSelector(state).selectedItem;
