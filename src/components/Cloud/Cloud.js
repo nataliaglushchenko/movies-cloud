@@ -41,7 +41,9 @@ function Cloud (props) {
     const quantities = uniq(tags.map(t => t.quantity));
     const coefficient = INDEX_VALUE / Math.max(...quantities);
 
-    const items = tags.map(item => (
+    const filteredTags = tags.filter(tag => tag.quantity !== 0);
+    
+    const items = filteredTags.map(item => (
         <Tag
             key={item.type}
             onClick={() => onSelectItem(item)}

@@ -2,22 +2,29 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import MoviesPage from './moviesPage';
-import { isMoviesLoadedSelector, isMoviesLoadingSelector, moviesSelector } from '../../boundedContexts/movies/ducks/movies';
-import { fetchMovies } from '../../boundedContexts/movies/actions/fetchMovies';
+import { fetchMatchedMovies } from '../../boundedContexts/movies/actions/fetchMovies';
 import { decadesSelector } from '../../boundedContexts/tags/ducks/decades';
+import { calculateDecades } from '../../boundedContexts/tags/actions/calculateDecades';
+
+import { 
+    isMatchedMoviesLoadedSelector, 
+    isMatchedMoviesLoadingSelector, 
+    matchedMoviesSelector 
+} from '../../boundedContexts/movies/ducks/matchedMovies';
 
 const mapStateToProps = (state) => {
     return {
-        movies: moviesSelector(state),
-        isLoaded: isMoviesLoadedSelector(state),
-        isLoading: isMoviesLoadingSelector(state),
+        movies: matchedMoviesSelector(state),
+        isLoaded: isMatchedMoviesLoadedSelector(state),
+        isLoading: isMatchedMoviesLoadingSelector(state),
         decades: decadesSelector(state)
     }
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        onFetchMovies: (genre, mode) => dispatch(fetchMovies(genre, mode))
+        onFetchMovies: (genre, mode) => dispatch(fetchMatchedMovies(genre, mode)),
+        onCalculateDecades: (movies) => dispatch(calculateDecades(movies))
     }
 };
 

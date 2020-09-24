@@ -5,7 +5,7 @@ import { SEARCH_MODES } from '../models/searchModes';
 // -----------------------------------------------------------------
 
 export const SEARCH_MODE_SELECTED = 'SEARCH_MODE_SELECTED';
-export const GENRES_UPDATED = 'GENRES_UPDATED';
+export const GENRES_CALCULATED = 'GENRES_CALCULATED';
 
 const initialState = {
     searchMode: SEARCH_MODES.SEARCH_BY_ALL_GENRES,
@@ -24,7 +24,7 @@ export default function reducer(state = initialState, action) {
                 searchMode: action.payload.searchMode
             };
 
-        case GENRES_UPDATED: 
+        case GENRES_CALCULATED: 
             return {
                 ...state,
                 genres: action.payload.genres
@@ -46,12 +46,12 @@ export const searchModeSelected = (searchMode) => {
     };
 };
 
-export const genresUpdated = (genres) => {
+export const genresCalculated = (genres) => {
     return {
-        type: GENRES_UPDATED,
+        type: GENRES_CALCULATED,
         payload: { genres }
-    }
-}
+    };
+};
 
 // -----------------------------------------------------------------
 // Selectors

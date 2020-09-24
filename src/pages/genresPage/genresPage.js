@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
 import { ButtonGroup, Button, Spinner } from 'reactstrap';
@@ -14,7 +14,7 @@ const propTypes = {
     searchMode: PropTypes.oneOf([SEARCH_MODES.SEARCH_BY_ALL_GENRES, SEARCH_MODES.SEARCH_BY_MAIN_GENRE]).isRequired,
     onSelectSearchMode: PropTypes.func.isRequired,
     genres: PropTypes.arrayOf(PropTypes.shape({
-        id: PropTypes.string,
+        id: PropTypes.number,
         type: PropTypes.string.isRequired,
         color: PropTypes.string,
         quantity: PropTypes.number.isRequired
@@ -32,12 +32,31 @@ function GenresPage(props) {
         history,
         searchMode,
         onSelectSearchMode,
-        genres
+        onCalculateGenres,
+        genres,
+        onFetchAllMovies,
+        isAllMoviesLoaded
     } = props;
+
+    const [countMoviesByGenre, setCountMoviesByGenre] = useState(null);
+    const [genreHovered, setGenreHovered] = useState('');
+    const [isMoviesCountShown, setIsMoviesCountShown] = useState(false);
 
     useEffect(() => {
         if (!isLoaded) onFetchRules();
-    }, []);     
+        if (!isAllMoviesLoaded) onFetchAllMovies();
+    }, []);  
+
+    useEffect(() => {
+        if(isLoaded && searchMode && isAllMoviesLoaded) onCalculateGenres();
+    }, [isLoaded, searchMode, isAllMoviesLoaded]);
+
+    const handleHoverTag = (genre) => {
+        setGenreHovered(genre);
+        const count = genres.find(item => item.type === genre).quantity;
+        setCountMoviesByGenre(count);
+        setIsMoviesCountShown(true);
+    };
 
     const handleSelectTag = (tag) => {
         const pathname = `/${searchMode}/${tag.type.toLowerCase()}`;
@@ -98,24 +117,49 @@ function GenresPage(props) {
             <div
                 className={cn(
                     'd-flex',
-                    'flex-row'
+                    'flex-column'
                 )}
             >
-                <div className={cn(
-                    'my-3', 
-                    'col-2'
-                )}>
-                    SELECT GENRE
+                <div
+                    className={cn(
+                        'd-flex', 
+                        'flex-row'
+                    )}
+                >
+                    <div className={cn(
+                        'my-3', 
+                        'col-2'
+                    )}>
+                        SELECT GENRE
+                    </div>
+                    <div
+                        className={cn(
+                            'my-3',
+                            'text-left',
+                            {
+                                'moviesPage__countMoviesByType_hidden': !isMoviesCountShown
+                            }
+                        )}
+                    >
+                        {genreHovered}: <b>{countMoviesByGenre}</b> { countMoviesByGenre === 1 ? 'Movie' : 'Movies' }
+                    </div>
                 </div>
+                
+
                 {
                     isLoaded && genres.lenght !== 0 && 
-                    <Cloud 
-                        className={cn(
-                            'flex-grow-1',
-                        )}
-                        tags={genres}
-                        onSelectItem={handleSelectTag}
-                    />
+                    <div
+                        className={cn('d-flex', 'flex-row')}
+                    >
+                        <div className={cn('col-md-3', 'col-0', 'm-0', 'p-0')}>
+                        </div>
+                        <Cloud 
+                            className={cn('col-md-6', 'col-12')}
+                            tags={genres}
+                            onHoverItem={handleHoverTag}
+                            onSelectItem={handleSelectTag}
+                        />
+                    </div>
                 }
             </div>
         </>

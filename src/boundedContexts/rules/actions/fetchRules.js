@@ -4,8 +4,6 @@ import {
     fetchRulesFailed
 } from '../ducks/rules';
 
-import { updateGenres } from '../../tags/actions/updateGenres';
-
 import Rule from '../models/rule';
 
 export const fetchRules = () => {
@@ -17,8 +15,6 @@ export const fetchRules = () => {
             .then(res => {
                 const rules = res.map(Rule.create);
                 dispatch(fetchRulesSucceeded(rules));
-
-                dispatch(updateGenres());
             })
             .catch(err => {
                 dispatch(fetchRulesFailed(err));

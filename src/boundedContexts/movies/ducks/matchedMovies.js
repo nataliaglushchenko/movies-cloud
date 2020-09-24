@@ -2,12 +2,12 @@
 // Constants
 // -----------------------------------------------------------------
 
-export const FETCH_MOVIES_STARTED = 'FETCH_MOVIES_STARTED';
-export const FETCH_MOVIES_SUCCEEDED = 'FETCH_MOVIES_SUCCEEDED';
-export const FETCH_MOVIES_FAILED = 'FETCH_MOVIES_FAILED';
+export const FETCH_MATCHED_MOVIES_STARTED = 'FETCH_MATCHED_MOVIES_STARTED';
+export const FETCH_MATCHED_MOVIES_SUCCEEDED = 'FETCH_MATCHED_MOVIES_SUCCEEDED';
+export const FETCH_MATCHED_MOVIES_FAILED = 'FETCH_MATCHED_MOVIES_FAILED';
 
 const initialState = {
-    movies: [],
+    matchedMovies: [],
     isLoaded: false,
     isLoading: false
 };
@@ -18,22 +18,22 @@ const initialState = {
 
 export default function reducer(state = initialState, action) {
     switch(action.type) {
-        case FETCH_MOVIES_STARTED: 
+        case FETCH_MATCHED_MOVIES_STARTED: 
             return {
                 ...state,
                 isLoading: true,
                 isLoaded: false
             }; 
 
-        case FETCH_MOVIES_SUCCEEDED: 
+        case FETCH_MATCHED_MOVIES_SUCCEEDED: 
             return {
                 ...state,
                 isLoading: false,
-                movies: action.payload.movies,
+                matchedMovies: action.payload.matchedMovies,
                 isLoaded: true
             }; 
 
-        case FETCH_MOVIES_FAILED:
+        case FETCH_MATCHED_MOVIES_FAILED:
             return {
                 ...state,
                 isLoading: false,
@@ -49,22 +49,22 @@ export default function reducer(state = initialState, action) {
 // Action Creators
 // -----------------------------------------------------------------
 
-export const fetchMoviesStarted = () => {
+export const fetchMatchedMoviesStarted = () => {
     return {
-        type: FETCH_MOVIES_STARTED
+        type: FETCH_MATCHED_MOVIES_STARTED
     };
 };
 
-export const fetchMoviesSucceeded = (movies) => {
+export const fetchMatchedMoviesSucceeded = (matchedMovies) => {
     return {
-        type: FETCH_MOVIES_SUCCEEDED,
-        payload: { movies }
+        type: FETCH_MATCHED_MOVIES_SUCCEEDED,
+        payload: { matchedMovies }
     };
 };
 
-export const fetchMoviesFailed = (error) => {
+export const fetchMatchedMoviesFailed = (error) => {
     return {
-        type: FETCH_MOVIES_FAILED,
+        type: FETCH_MATCHED_MOVIES_FAILED,
         payload: error
     };
 };
@@ -73,8 +73,8 @@ export const fetchMoviesFailed = (error) => {
 // Selectors
 // -----------------------------------------------------------------
 
-const rootSelector = state => state.movies.movies;
+const rootSelector = state => state.movies.matchedMovies;
 
-export const isMoviesLoadingSelector = state => rootSelector(state).isLoading;
-export const isMoviesLoadedSelector = state => rootSelector(state).isLoaded;
-export const moviesSelector = state => rootSelector(state).movies;
+export const isMatchedMoviesLoadingSelector = state => rootSelector(state).isLoading;
+export const isMatchedMoviesLoadedSelector = state => rootSelector(state).isLoaded;
+export const matchedMoviesSelector = state => rootSelector(state).matchedMovies;

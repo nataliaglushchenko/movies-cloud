@@ -16,20 +16,26 @@ import {
 } from '../../boundedContexts/tags/ducks/genres';
 
 import { selectSearchMode } from '../../boundedContexts/tags/actions/selectSearchMode';
+import { calculateGenres } from '../../boundedContexts/tags/actions/calculateGenres';
+import { fetchMovies } from '../../boundedContexts/movies/actions/fetchMovies';
+import { isMoviesLoadedSelector } from '../../boundedContexts/movies/ducks/movies';
 
 const mapStateToProps = (state) => {
     return {
         isLoading: isRulesLoadingSelector(state),
         isLoaded: isRulesLoadedSelector(state),
         searchMode: searchModeSelector(state),
-        genres: genresSelector(state)
+        genres: genresSelector(state),
+        isAllMoviesLoaded: isMoviesLoadedSelector(state)
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
         onFetchRules: () => dispatch(fetchRules()),
-        onSelectSearchMode: (searchMode) => dispatch(selectSearchMode(searchMode))
+        onFetchAllMovies: () => dispatch(fetchMovies()),
+        onSelectSearchMode: (searchMode) => dispatch(selectSearchMode(searchMode)),
+        onCalculateGenres: () => dispatch(calculateGenres())
     };
 };
 

@@ -1,5 +1,6 @@
 import uniq from 'lodash/uniq';
 import RULE_MATCH_TYPES_MAP from '../../movies/models/ruleMatchTypeMappings';
+import { RULE_MATCH_TYPES } from '../../rules/models/rulesMatchTypes';
 
 class Tag {}
 
@@ -9,27 +10,41 @@ Tag.create = function createTag(tag) {
         id: id || null,
         type: type || '',
         color: color || '',
-        quantity: quantity || '',
+        quantity: Number(quantity) || 0,
     };
 }
 
 Tag.createEmpty = function createEmpty() {
     return {
-        id: '',
+        id: null,
         type: '',
         color: '',
-        quantity: ''
+        quantity: 0
     };
 };
 
-export function calculateQuantityByGenres(data) {
-    return uniq(data.map(item => item.genre))
-        .map(genre => {
-            return {
-                quantity: data.filter(item => item.genre === genre).length,
-                type: genre
-            };
-        });
+export function calculateQuantityByGenres (movies, rules, ruleMatchType) {
+    const genres = uniq(rules.map(item => item.genre));
+
+    const calculatedQuantities = genres.map(genre => {
+        const matchedMoviesQuantity = movies.filter(movie => {
+            switch (ruleMatchType) {
+                case RULE_MATCH_TYPES.CONTAINS: 
+                    return movie.genres.includes(genre);
+                case RULE_MATCH_TYPES.STARTS_WITH:
+                    return movie.genres.startsWith(genre);
+                default: 
+                    return false;
+            }
+        }).length;
+
+        return {
+            quantity: matchedMoviesQuantity,
+            type: genre
+        };
+    });
+
+    return calculatedQuantities;
 }
 
 function calculateQuantityByDecades(data) {
@@ -56,14 +71,16 @@ function addQuantityProperty(data, quantities) {
 }
 
 Tag.getDecadesTags = function getDecadesTags(movies) {
-    const decades = calculateQuantityByDecades(movies);
+    const rawDecades = calculateQuantityByDecades(movies);
+    const decades = rawDecades.map(Tag.create);
     return decades;
 }
 
-Tag.getGenresTags = function getGenresTags(rules, mode) {
-    const rawRules = rules.filter(rule => rule.ruleMatchType === RULE_MATCH_TYPES_MAP[mode]);
+Tag.getGenresTags = function getGenresTags(movies, rules, mode) {
+    const ruleMatchType = RULE_MATCH_TYPES_MAP[mode];
+    const rawRules = rules.filter(rule => rule.ruleMatchType === ruleMatchType);
 
-    const quantities = calculateQuantityByGenres(rawRules);
+    const quantities = calculateQuantityByGenres(movies, rawRules, ruleMatchType);
 
     const genresTags = addQuantityProperty(rawRules, quantities);
     return genresTags;
