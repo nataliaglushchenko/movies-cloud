@@ -60,7 +60,6 @@ function Cloud (props) {
             'cloud',
             'my-2',
             'mx-5',
-            'mx-md-4',
             'd-flex',
             'flex-wrap',
             'align-content-center',

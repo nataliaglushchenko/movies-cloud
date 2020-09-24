@@ -1,13 +1,13 @@
 import React from 'react';
 import { configure, shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import "isomorphic-fetch";
+import 'isomorphic-fetch';
+import { Spinner } from 'reactstrap';
 
 import Cloud from '../../components/cloud';
 import GenresPage from './genresPage';
-import { Spinner } from 'reactstrap';
 
-configure({adapter: new Adapter()});
+configure({ adapter: new Adapter() });
 
 describe('<GenresPage />', () => {
     let wrapper;

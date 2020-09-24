@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import noop from 'lodash/noop';
 import cn from 'classnames';
 import { ButtonGroup, Button, Spinner } from 'reactstrap';
 

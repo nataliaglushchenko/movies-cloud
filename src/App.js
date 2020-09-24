@@ -24,7 +24,7 @@ function MoviesPageWrapped() {
 function App () {
     return (
         <Switch>
-            <Route path="/genre/:genre" exact component={MoviesPageWrapped} />
+            <Route path="/:mode/:genre" exact component={MoviesPageWrapped} />
             <Route path="/" exact component={GenresPageWrapped} />
             <Redirect to="/" />
         </Switch>
