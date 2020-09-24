@@ -1,29 +1,24 @@
-import React, { Component } from 'React';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import CSSModules from 'react-css-modules';
 import cn from 'classnames';
-import uniqBy from 'lodash/uniqBy';
+import { Badge, Spinner } from 'reactstrap';
 
-import { getHash } from '../../utitls/hash';
 import Cloud from '../../components/cloud';
-import Tag from '../../components/tag';
+import SideBar from '../../components/sideBar';
+import { SEARCH_MODES } from '../../boundedContexts/tags/models/searchModes';
 
-import styles from './moviesPage.module.scss';
-
-const PADDING_WEIGHT = 10;
-
-const RULE_MATCH_TYPE = {
-    CONTAINS: 'contains',
-    STARTS_WITH: 'startsWith'
-};
+import './moviesPage.css';
 
 const propTypes = {
     onFetchMovies: PropTypes.func.isRequired,
-    selectedItem: PropTypes.shape({
+    selectedRule: PropTypes.shape({
         genre: PropTypes.string,
         ruleMatchType: PropTypes.string,
-        ruleFlag: PropTypes.string
+        ruleFlag: PropTypes.string,
+        ruleId: PropTypes.number,
+        count: PropTypes.number
     }),
+    isRuleSelected: PropTypes.bool,
     matchedMovies:  PropTypes.arrayOf(PropTypes.shape({
         place: PropTypes.number,
         title: PropTypes.string,
@@ -36,164 +31,154 @@ const propTypes = {
 };
 
 const defaultProps = {
-    selectedItem: null,
+    selectedRule: null,
     matchedMovies: []
 };
 
-class MoviesPage extends Component {
-    state = {
-        tagClicked: null,
-        showSidebar: false,
-        moviesByType: []
-    }
+function MoviesPage (props) {
+    const { 
+        movies,
+        isLoaded,
+        isLoading,
+        decades,
+        onFetchMovies,
+        location,
+        match,
+    } = props;
 
-    componentDidMount() {
-        this.props.onFetchMovies();
-    }
+    const [selectedDecade, setSelectedDecade] = useState('');
+    const [decadeHovered, setDecadeHovered] = useState('');
+    const [isSidebarShown, setIsSidebarShown] = useState(false);
+    const [moviesByType, setMoviesByType] = useState([]);
+    const [countMoviesByType, setCountMoviesByType] = useState(null);
+    const [isMoviesCountShown, setIsMoviesCountShown] = useState(false);
 
-    handleHover = (decade) => {
-        const count = this.props.matchedMovies
+    const { params } = match;
+    const { mode, genre } = params;
+
+    useEffect(() => {
+        onFetchMovies(genre, mode);
+    }, [location]);
+
+    const handleHover = (decade) => {
+        setDecadeHovered(decade);
+        const count = movies
             .filter(item => item.decade === decade)
-            .length;  
-       this.setState({countMoviesByType: count, showSidebar: true});
+            .length;
+        
+        setCountMoviesByType(count);
+        setIsMoviesCountShown(true);
+    };
+
+    const handleMouseOut = () => {
+        setIsMoviesCountShown(false);
+        setDecadeHovered(null);
+    };
+
+    const handleClick = (tag) => {
+        setSelectedDecade(tag.type);
+
+        const moviesByType = movies.filter(item => item.decade === tag.type);
+        setMoviesByType(moviesByType);
+
+        setIsSidebarShown(true);
+    };
+
+    if (!isLoaded) {
+        return isLoading ? <div className={cn('text-center', 'mt-5')}><Spinner /></div> : '';
     }
-
-    handleClick = (decade) => {
-        const moviesByType = this.props.matchedMovies
-            .filter(item => item.decade === decade)
-        this.setState({moviesByType: moviesByType, tagClicked: decade});
-    }
-
-    handleGoBackClick = () => {
-        this.props.history.goBack();
-    }
-
-    render() {
-        const { 
-            styles, 
-            matchedMovies, 
-            isLoaded 
-        } = this.props;
-    
-        let layout = null;
-        let heading = null;
-
-        if (isLoaded && matchedMovies.length === 0) {
-            heading = <div className={cn(styles['Heading'])}>
-                THERE IS NO MATCHED MOVIES YET
-            </div>;
-        }
-
-        if (isLoaded && matchedMovies.length != 0) {
-            heading = <h2 className={cn(styles['Heading'])}>
-                <span style={{ color: this.props.selectedItem.ruleFlag }}>                        
-                    {this.props.selectedItem.genre.toUpperCase()}
-                </span> 
-                <span>
-                &ensp;
-                    {this.props.selectedItem.ruleMatchType===RULE_MATCH_TYPE.CONTAINS ? ' is one of all movie genres here' : ' is the main movie genre here'}
-                </span>
-            </h2>;
-
-            const decades = uniqBy(matchedMovies, 'decade');
-
-            const typesTags  = decades
-                .map(item => {
-                    return (
-                        <Tag 
-                            key={getHash(`${item.decade}${item.place}`)}
-                            onMouseOver={() => this.handleHover(item.decade)}
-                            onClick={() => this.handleClick(item.decade)}
-                            clicked={this.state.tagClicked === item.decade}
-                            padding={item.count*PADDING_WEIGHT}
-                            backgroundColor={this.props.selectedItem.ruleFlag.toLowerCase()}
-                        >
-                            {item.decade}
-                        </Tag>
-                    );
-                }   
-            );
-
-            let moviesBySelectedType = null;
-
-            if (this.state.moviesByType) {
-                moviesBySelectedType = this.state.moviesByType
-                    .map(item => {
-                        return (
-                            <div 
-                                key={item.place}
-                                className={cn(styles['MovieDescription'])}
-                            >
-                                <h4 className={cn(styles['MovieTitle'])}>
-                                    {item.title}
-                                </h4>
-                                <div className={cn(styles['MovieGenres'])}>
-                                    {item.genres.split(', ').map(genre => {
-                                        return <span key={genre} style={{ color: genre==this.props.selectedItem.genre ? this.props.selectedItem.ruleFlag: null }}>
-                                            {`${genre} `}
-                                        </span>
-                                    })}
-                                </div>
-                                <div className={cn(styles['MovieYear'])}>
-                                    Year: {item.year}
-                                </div>
-                                <div className={cn(styles['MovieDuration'])}>
-                                    {`Duration: ${item.duration} min.`}
-                                </div>
-                            </div>
-                        );
-                    });
-
-                layout = <div className={cn(styles['Layout'])}>
-                    <div className={cn(styles['TypesCloud'])}>
-                        <Cloud>
-                            {typesTags}
-                        </Cloud>
-                    </div>
-                    <div className={cn(
-                        styles['Sidebar'], 
-                        {
-                            [styles['Hidden']]: !this.state.showSidebar
-                        }
-                    )}>
-                        <h3>
-                            DETAILS
-                        </h3>
-                        <div className={cn(styles['TotalMatches'])}>
-                            {`TOTAL MATCHES: `}
-                            <span style={{ color: this.props.selectedItem.ruleFlag, fontWeight: 'bold' }}>
-                                {this.state.countMoviesByType}
-                            </span>
-                        </div>
-                        <div className={cn(
-                            styles['TotalMatches'],
-                            {
-                                [styles['Hidden']]: !this.state.tagClicked
-                            })}>
-                                MOVIES: {moviesBySelectedType}
-                        </div>
-                    </div>
-                </div>
-            }
-        };
-
-        return (
-            <React.Fragment>
-                {heading}
-                <button 
-                    className={cn(styles['GoBackButton'])} 
-                    onClick={this.handleGoBackClick}
+    return (
+        <>
+            <h4 className={cn('text-center')}>
+                {`FIND ${genre.toUpperCase()} MOVIES BY DECADE`}
+            </h4>
+            <div
+                className={cn(
+                    'd-flex',
+                    'flex-md-row',
+                    'flex-column',
+                    'justify-content-md-around',
+                    'justify-content-start',
+                    'align-items-start',
+                    'm-2'
+                )}
+            >
+                <div
+                    className={cn('col-md-6', 'col-12')}
                 >
-                    BACK
-                </button>
-                {layout}
-            </React.Fragment>
-            
-        )
-    }
+                    <div
+                        className={cn(
+                            'my-4',
+                            'd-flex',
+                            'flex-row',
+                            'align-items-baseline',
+                            'h-100'
+                        )}
+                    >
+                        <div>
+                            SELECTED SEARCH MODE:
+                        </div>
+                        <Badge
+                            className={cn('mx-2')}
+                        >
+                            { mode === SEARCH_MODES.SEARCH_BY_ALL_GENRES && `SEARCH BY ALL GENRES`}
+                            { mode === SEARCH_MODES.SEARCH_BY_MAIN_GENRE && `SEARCH BY PRINCIPLE GENRE`}
+                        </Badge>
+                    </div>
+                    <div
+                        className={cn(
+                            'my-4',
+                        )}
+                    >
+                        {`FOUND ${movies.length} ${movies.length === 1 ? 'MOVIE' : 'MOVIES'}`}
+                    </div>
+                    <div
+                        className={cn(
+                            'my-4',
+                        )}
+                    >
+                        { isLoaded ? 'Click on the decade to see the movies': '' }
+                    </div>
+                    <div
+                        className={cn(
+                            'my-4',
+                            'text-left',
+                            {
+                                'moviesPage__countMoviesByType_hidden': !isMoviesCountShown
+                            }
+                        )}
+                    >
+                        {decadeHovered}: <b>{countMoviesByType}</b> { countMoviesByType === 1 ? 'Movie' : 'Movies' }
+                    </div>
+
+                    {
+                        isLoaded && decades.length !== 0 &&
+                        <Cloud
+                            tags={decades}
+                            onSelectItem={handleClick}
+                            selectedItem={selectedDecade}
+                            onHoverItem={handleHover}
+                            onMouseOut={handleMouseOut}
+                        />
+                    }
+                </div>
+                <SideBar
+                    className={cn(
+                        'my-4',
+                        'col-md-6',
+                        'col-12'
+                    )}
+                    isShown={isSidebarShown}
+                    decade={selectedDecade}
+                    moviesByType={moviesByType}
+                    selectedGenre={genre}
+                />
+            </div>
+        </>
+    );
 }
 
 MoviesPage.propTypes = propTypes;
 MoviesPage.defaultProps = defaultProps;
 
-export default CSSModules(MoviesPage, styles);
+export default MoviesPage;
