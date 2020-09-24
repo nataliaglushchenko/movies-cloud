@@ -12,7 +12,7 @@ const propTypes = {
     onClick: PropTypes.func.isRequired,
     active: PropTypes.bool,
     padding: PropTypes.number,
-    backgroundColor: PropTypes.oneOf(Object.values(RULE_COLORS)),
+    backgroundColor: PropTypes.string,
     title: PropTypes.string.isRequired
 };
 

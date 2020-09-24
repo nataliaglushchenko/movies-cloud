@@ -2,7 +2,7 @@
 // Constants
 // -----------------------------------------------------------------
 
-export const CALCULATE_MOVIES_QUANTITY_BY_DECADES = 'CALCULATE_MOVIES_QUANTITY_BY_DECADES';
+export const DECADES_CALCULATED = 'DECADES_CALCULATED';
 
 const initialState = {
     decades: []
@@ -14,11 +14,11 @@ const initialState = {
 
 export default function reducer(state = initialState, action) {
     switch(action.type) {
-        case CALCULATE_MOVIES_QUANTITY_BY_DECADES:
+        case DECADES_CALCULATED:
             return {
                 ...state,
                 decades: action.payload.decades
-            };
+            }
         default: 
             return state;
     }  
@@ -28,12 +28,12 @@ export default function reducer(state = initialState, action) {
 // Action Creators
 // -----------------------------------------------------------------
 
-export const moviesQuantityByDecadesCalculated = (decades) => {
+export const decadesCalculated = (decades) => {
     return {
-        type: CALCULATE_MOVIES_QUANTITY_BY_DECADES,
+        type: DECADES_CALCULATED,
         payload: { decades }
-    }
-}
+    };
+};
 
 // -----------------------------------------------------------------
 // Selectors

@@ -27,7 +27,8 @@ const propTypes = {
         genre: PropTypes.string,
         duration: PropTypes.number
     })),
-    styles: PropTypes.object
+    styles: PropTypes.object,
+    onCalculateDecades: PropTypes.func.isRequired
 };
 
 const defaultProps = {
@@ -42,7 +43,7 @@ function MoviesPage (props) {
         isLoading,
         decades,
         onFetchMovies,
-        location,
+        onCalculateDecades,
         match,
     } = props;
 
@@ -57,8 +58,12 @@ function MoviesPage (props) {
     const { mode, genre } = params;
 
     useEffect(() => {
-        onFetchMovies(genre, mode);
-    }, [location]);
+        if(!isLoaded) onFetchMovies(genre, mode);
+    }, []);
+
+    useEffect(() => {
+        if(isLoaded) onCalculateDecades(movies);
+    }, [movies, isLoaded]);
 
     const handleHover = (decade) => {
         setDecadeHovered(decade);
@@ -137,7 +142,7 @@ function MoviesPage (props) {
                             'my-4',
                         )}
                     >
-                        { isLoaded ? 'Click on the decade to see the movies': '' }
+                        { isLoaded && decades.length !== 0 ? 'Click on the decade to see the movies': '' }
                     </div>
                     <div
                         className={cn(
