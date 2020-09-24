@@ -1,33 +1,77 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-
-import CSSModules from 'react-css-modules';
 import cn from 'classnames';
+import { noop, uniq } from 'lodash';
 
-import CloudStyles from './Cloud.module.scss';
+import Tag from '../tag';
+
+import './cloud.css';
 
 const propTypes = {
-    children: PropTypes.arrayOf(PropTypes.node),
-    styles: PropTypes.object
+    tags: PropTypes.arrayOf(PropTypes.shape({
+        id: PropTypes.number,
+        type: PropTypes.string.isRequired,
+        color: PropTypes.string,
+        quantity: PropTypes.number.isRequired
+    })).isRequired,
+    onSelectItem: PropTypes.func.isRequired,
+    selectedItem: PropTypes.string,
+    onHoverItem: PropTypes.func,
+    onMousOutItem: PropTypes.func
 };
 
 const defaultProps = {
-    children: []
+    onHoverItem: noop,
+    onMousOutItem: noop,
+    selectedItem: ''
 };
 
-class Cloud extends Component {
-    render() {
-        const { children, styles } = this.props;
+const INDEX_VALUE = 30;
 
-        return (
-            <div className={cn(styles['Cloud'])}>
-                {children}
-            </div>
-        );
-    }
+function Cloud (props) {
+    const { 
+        tags,
+        onSelectItem,
+        selectedItem,
+        onHoverItem,
+        onMousOutItem,
+        className
+    } = props;
+
+    const quantities = uniq(tags.map(t => t.quantity));
+    const coefficient = INDEX_VALUE / Math.max(...quantities);
+
+    const items = tags.map(item => (
+        <Tag
+            key={item.type}
+            onClick={() => onSelectItem(item)}
+            onHover={onHoverItem}
+            onMousOut={onMousOutItem}
+            padding={item.quantity * coefficient}
+            backgroundColor={item.color}
+            title={item.type}
+            active={item.type === selectedItem}
+        />
+    ));
+
+    return (
+        <div className={cn(
+            className, 
+            'cloud',
+            'my-2',
+            'mx-5',
+            'd-flex',
+            'flex-wrap',
+            'align-content-center',
+            'justify-content-center',
+            'align-items-center'
+        )}>
+            {items}
+        </div>
+    );
 }
 
 Cloud.propTypes = propTypes;
 Cloud.defaultProps = defaultProps;
 
-export default CSSModules(Cloud, CloudStyles);
+export default Cloud;

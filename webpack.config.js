@@ -32,6 +32,14 @@ module.exports = {
                 }
             },
             {
+                test: /\.css$/,
+                exclude: /\.scss$/,
+                use: [
+                    'style-loader', 
+                    'css-loader'
+                ]
+            },
+            {
                 test: /\.scss$/,
                 exclude: /\.module.scss$/,
                 use: [
